@@ -20,7 +20,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Turn your finished crochet into beautiful, social-media-ready content in a couple of minutes.",
+          "Upload a finished crochet project and get an enhanced photo, ready-to-post captions, hashtags, pricing guidance and five fresh ideas.",
       },
     ],
   }),

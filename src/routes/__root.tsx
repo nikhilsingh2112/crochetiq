@@ -84,16 +84,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "CrochetIQ turns a finished crochet project into share-ready photos, captions, hashtags and pricing ideas.",
+          "Upload a finished crochet project and get an enhanced photo, ready-to-post captions, hashtags, pricing guidance and five fresh ideas.",
       },
       { property: "og:title", content: "CrochetIQ — Your AI assistant for crochet creators" },
       {
         property: "og:description",
         content:
-          "Upload your crochet, get an enhanced photo, captions, hashtags, pricing and fresh project ideas.",
+          "Upload a finished crochet project and get an enhanced photo, ready-to-post captions, hashtags, pricing guidance and five fresh ideas.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "CrochetIQ — Your AI assistant for crochet creators" },
+      { name: "twitter:description", content: "Upload a finished crochet project and get an enhanced photo, ready-to-post captions, hashtags, pricing guidance and five fresh ideas." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/bbf17fa1-3901-49cb-8168-5a58ddc92c61" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/bbf17fa1-3901-49cb-8168-5a58ddc92c61" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -103,7 +107,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Nunito:wght@400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
