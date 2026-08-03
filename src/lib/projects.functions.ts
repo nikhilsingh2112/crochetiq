@@ -25,6 +25,7 @@ const saveSchema = z.object({
     hashtags: z.array(z.string()),
     pricingMin: z.number(),
     pricingMax: z.number(),
+    currency: z.enum(["INR", "USD"]).default("USD"),
   }),
   ideas: z.array(z.object({ title: z.string(), description: z.string().default("") })),
 });
