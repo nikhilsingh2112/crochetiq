@@ -60,7 +60,7 @@ export const generateCrochetContent = createServerFn({ method: "POST" })
     const { guardAiUsage } = await import("./ai/guest-quota.server");
     await guardAiUsage(false);
     const { runContent } = await import("./ai/content.server");
-    return runContent(data.analysis, data.goal as CrochetGoal, data.notes);
+    return runContent(data.analysis, data.goal as CrochetGoal, data.notes, data.currency as CrochetCurrency);
   });
 
 /** How many free runs an unauthenticated visitor has left. */
