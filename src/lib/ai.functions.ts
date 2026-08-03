@@ -30,6 +30,7 @@ const contentSchema = z.object({
   }),
   goal: z.enum(["social", "sell", "ideas"]),
   notes: z.string().max(1000).default(""),
+  currency: z.enum(["INR", "USD"]).default("USD"),
 });
 
 /** Vision Service entry point. Consumes one guest run. */
