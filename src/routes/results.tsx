@@ -93,7 +93,12 @@ function ResultsPage() {
     try {
       const nextAnalysis = { ...draft.analysis, detectedItem: itemName.trim() };
       const nextContent = await regenerate({
-        data: { analysis: nextAnalysis, goal: draft.goal, notes: draft.notes },
+        data: {
+          analysis: nextAnalysis,
+          goal: draft.goal,
+          notes: draft.notes,
+          currency: draft.content.currency ?? "USD",
+        },
       });
       const next = { ...draft, analysis: nextAnalysis, content: nextContent };
       setDraft(next);
