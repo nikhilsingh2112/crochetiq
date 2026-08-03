@@ -158,7 +158,18 @@ function UploadPage() {
           </div>
         ) : null}
 
-        <Card className="mt-8 rounded-3xl border-border/60 shadow-soft">
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <Badge variant="secondary" className="rounded-full px-3 py-1.5">
+            Pricing estimates in {currencyLabel(currency)}
+          </Badge>
+          <p className="text-xs text-muted-foreground">
+            {currency === "INR"
+              ? "Detected India — prices will suit the Indian handmade market."
+              : "Detected outside India — prices will be in US Dollars."}
+          </p>
+        </div>
+
+        <Card className="mt-6 rounded-3xl border-border/60 shadow-soft">
           <CardContent className="p-6">
             <div
               onDragOver={(event) => {
