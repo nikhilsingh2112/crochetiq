@@ -142,6 +142,7 @@ export const getDashboard = createServerFn({ method: "GET" })
           }
         }
         const analysis = Array.isArray(row.ai_analysis) ? row.ai_analysis[0] : row.ai_analysis;
+        const content = Array.isArray(row.ai_content) ? row.ai_content[0] : row.ai_content;
         return {
           id: row.id as string,
           goal: row.goal as string,
@@ -150,6 +151,9 @@ export const getDashboard = createServerFn({ method: "GET" })
           detectedItem: analysis?.detected_item ?? "Crochet project",
           category: analysis?.category ?? "Handmade",
           difficulty: analysis?.difficulty ?? "",
+          pricingMin: content?.pricing_min ?? 0,
+          pricingMax: content?.pricing_max ?? 0,
+          currency: (content?.currency as "INR" | "USD") ?? "USD",
         };
       }),
     );
