@@ -5,6 +5,7 @@ import { ImagePlus, Loader2, ShoppingBag, Sparkles, Lightbulb, X } from "lucide-
 import { toast } from "sonner";
 
 import { SiteHeader } from "@/components/SiteHeader";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { savePendingUpload } from "@/lib/draft-store";
 import { getGuestAllowance } from "@/lib/ai.functions";
 import type { CrochetGoal } from "@/lib/ai/types";
+import { currencyLabel, detectCurrency, type CrochetCurrency } from "@/lib/currency";
 
 export const Route = createFileRoute("/upload")({
   validateSearch: (search: Record<string, unknown>) => ({
