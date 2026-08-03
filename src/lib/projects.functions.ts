@@ -94,6 +94,7 @@ export const saveCrochetProject = createServerFn({ method: "POST" })
         hashtags: data.content.hashtags,
         pricing_min: data.content.pricingMin,
         pricing_max: data.content.pricingMax,
+        currency: data.content.currency,
       }),
       data.ideas.length
         ? supabase.from("ideas").insert(
