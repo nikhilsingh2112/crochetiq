@@ -188,7 +188,74 @@ export const getDashboard = createServerFn({ method: "GET" })
     };
   });
 
+export const getProject = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+
+    const { data: row, error } = await supabase
+      .from("projects")
+      .select(
+        "id, goal, notes, created_at, original_image_url, enhanced_image_url, ai_analysis(detected_item, category, difficulty, colors, suggested_use), ai_content(friendly_caption, professional_caption, playful_caption, product_description, hashtags, pricing_min, pricing_max, currency), ideas(id, title, description)",
+      )
+      .eq("id", data.id)
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (error) throw new Error(error.message);
+    if (!row) throw new Error("Project not found.");
+
+    const sign = async (stored: string | null): Promise<string | null> => {
+      if (!stored) return null;
+      if (stored.startsWith("http") || stored.startsWith("data:")) return stored;
+      const { data: signed } = await supabase.storage.from(BUCKET).createSignedUrl(stored, 60 * 60);
+      return signed?.signedUrl ?? null;
+    };
+
+    const [originalImage, enhancedImage] = await Promise.all([
+      sign(row.original_image_url as string | null),
+      sign(row.enhanced_image_url as string | null),
+    ]);
+
+    const analysis = Array.isArray(row.ai_analysis) ? row.ai_analysis[0] : row.ai_analysis;
+    const content = Array.isArray(row.ai_content) ? row.ai_content[0] : row.ai_content;
+    const ideas = Array.isArray(row.ideas) ? row.ideas : [];
+
+    return {
+      id: row.id as string,
+      goal: row.goal as "social" | "sell" | "ideas",
+      notes: (row.notes as string) ?? "",
+      createdAt: row.created_at as string,
+      originalImage,
+      enhancedImage,
+      analysis: {
+        detectedItem: analysis?.detected_item ?? "Crochet project",
+        category: analysis?.category ?? "Handmade",
+        difficulty: analysis?.difficulty ?? "",
+        colors: (analysis?.colors as string[] | null) ?? [],
+        suggestedUse: analysis?.suggested_use ?? "",
+      },
+      content: {
+        friendlyCaption: content?.friendly_caption ?? "",
+        professionalCaption: content?.professional_caption ?? "",
+        playfulCaption: content?.playful_caption ?? "",
+        productDescription: content?.product_description ?? "",
+        hashtags: (content?.hashtags as string[] | null) ?? [],
+        pricingMin: content?.pricing_min ?? 0,
+        pricingMax: content?.pricing_max ?? 0,
+        currency: ((content?.currency as "INR" | "USD") ?? "USD") as "INR" | "USD",
+      },
+      ideas: ideas.map((idea) => ({
+        id: idea.id as string,
+        title: idea.title as string,
+        description: (idea.description as string) ?? "",
+      })),
+    };
+  });
+
 export const getProfile = createServerFn({ method: "GET" })
+
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { data } = await context.supabase
