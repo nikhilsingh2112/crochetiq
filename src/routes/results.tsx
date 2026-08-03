@@ -26,7 +26,7 @@ import { GOAL_LABELS, type CrochetProjectDraft } from "@/lib/ai/types";
 import { generateCrochetContent } from "@/lib/ai.functions";
 import { clearDraft, loadDraft, saveDraft } from "@/lib/draft-store";
 import { saveCrochetProject } from "@/lib/projects.functions";
-import { currencyLabel, formatPrice, type CrochetCurrency } from "@/lib/currency";
+import { convertPrice, currencyLabel, formatPrice, type CrochetCurrency } from "@/lib/currency";
 
 export const Route = createFileRoute("/results")({
   head: () => ({
@@ -386,8 +386,10 @@ function ResultsPage() {
                 Estimated Price Range
               </p>
               <p className="mt-1 font-display text-2xl">
-                {formatPrice(content.pricingMin, displayCurrency)} – {formatPrice(content.pricingMax, displayCurrency)}
+                {formatPrice(convertPrice(content.pricingMin, content.currency ?? "USD", displayCurrency), displayCurrency)} –{" "}
+                {formatPrice(convertPrice(content.pricingMax, content.currency ?? "USD", displayCurrency), displayCurrency)}
               </p>
+
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
