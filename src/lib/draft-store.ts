@@ -33,6 +33,7 @@ export interface PendingUpload {
   image: string;
   goal: "social" | "sell" | "ideas";
   notes: string;
+  currency: "INR" | "USD";
 }
 
 export function savePendingUpload(pending: PendingUpload) {
