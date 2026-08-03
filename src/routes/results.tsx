@@ -58,6 +58,7 @@ function ResultsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [gateOpen, setGateOpen] = useState(false);
+  const [displayCurrency, setDisplayCurrency] = useState<CrochetCurrency>("USD");
 
   useEffect(() => {
     const stored = loadDraft();
@@ -67,6 +68,7 @@ function ResultsPage() {
     }
     setDraft(stored);
     setItemName(stored.analysis.detectedItem);
+    setDisplayCurrency(stored.content.currency ?? "USD");
   }, [navigate]);
 
   if (!draft) {
