@@ -398,7 +398,11 @@ function ResultsPage() {
             <Detail label="Difficulty" value={analysis.difficulty} />
             <Detail label="Estimated Time Investment" value={content.estimatedTime} />
             <p className="text-xs text-muted-foreground sm:col-span-2 lg:col-span-4">
-              Estimates are in {currencyLabel(content.currency)} based on your location. Your local market, materials and experience are the final word.
+              Estimates are shown in {currencyLabel(displayCurrency)}
+              {displayCurrency === content.currency
+                ? " based on your location."
+                : " (you switched the display currency)."}{" "}
+              Your local market, materials and experience are the final word.
             </p>
           </CardContent>
         </Card>
