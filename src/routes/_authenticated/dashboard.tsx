@@ -62,42 +62,51 @@ function DashboardPage() {
               {data?.projects.length ? (
                 <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                   {data.projects.map((project) => (
-                    <Card key={project.id} className="overflow-hidden rounded-3xl border-border/60 shadow-soft">
-                      <div className="aspect-[4/3] w-full bg-cream/60">
-                        {project.image ? (
-                          <img
-                            src={project.image}
-                            alt={project.detectedItem}
-                            className="size-full object-cover"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="grid size-full place-items-center text-muted-foreground">
-                            <ImageIcon className="size-8" />
-                          </div>
-                        )}
-                      </div>
-                      <CardContent className="p-5">
-                        <h3 className="font-display text-lg">{project.detectedItem}</h3>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {new Date(project.createdAt).toLocaleDateString(undefined, {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
-                        </p>
-                        <p className="mt-2 font-display text-lg">
-                          {formatPrice(project.pricingMin, project.currency)} – {formatPrice(project.pricingMax, project.currency)}
-                        </p>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          <Badge variant="secondary" className="rounded-full">{project.category}</Badge>
-                          {project.difficulty ? (
-                            <Badge variant="outline" className="rounded-full">{project.difficulty}</Badge>
-                          ) : null}
+                    <Link
+                      key={project.id}
+                      to="/projects/$projectId"
+                      params={{ projectId: project.id }}
+                      className="group block focus-visible:outline-none"
+                    >
+                      <Card className="h-full overflow-hidden rounded-3xl border-border/60 shadow-soft transition-transform group-hover:-translate-y-1 group-focus-visible:ring-2 group-focus-visible:ring-ring">
+                        <div className="aspect-[4/3] w-full bg-cream/60">
+                          {project.image ? (
+                            <img
+                              src={project.image}
+                              alt={project.detectedItem}
+                              className="size-full object-cover"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="grid size-full place-items-center text-muted-foreground">
+                              <ImageIcon className="size-8" />
+                            </div>
+                          )}
                         </div>
-                      </CardContent>
-                    </Card>
+                        <CardContent className="p-5">
+                          <h3 className="font-display text-lg">{project.detectedItem}</h3>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            {new Date(project.createdAt).toLocaleDateString(undefined, {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </p>
+                          <p className="mt-2 font-display text-lg">
+                            {formatPrice(project.pricingMin, project.currency)} – {formatPrice(project.pricingMax, project.currency)}
+                          </p>
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <Badge variant="secondary" className="rounded-full">{project.category}</Badge>
+                            {project.difficulty ? (
+                              <Badge variant="outline" className="rounded-full">{project.difficulty}</Badge>
+                            ) : null}
+                          </div>
+                          <p className="mt-4 text-sm font-medium text-primary">View project →</p>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   ))}
+
                 </div>
               ) : (
                 <Card className="mt-5 rounded-3xl border-dashed border-border bg-cream/40 shadow-none">
