@@ -152,6 +152,7 @@ function ResultsPage() {
             hashtags: draft.content.hashtags,
             pricingMin: draft.content.pricingMin,
             pricingMax: draft.content.pricingMax,
+            currency: draft.content.currency ?? "USD",
           },
           ideas: draft.content.ideas.map((idea) => ({
             title: idea.title,
