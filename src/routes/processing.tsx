@@ -64,7 +64,12 @@ function ProcessingPage() {
 
         setStage(2);
         const content = await generate({
-          data: { analysis, goal: pending.goal, notes: pending.notes },
+          data: {
+            analysis,
+            goal: pending.goal,
+            notes: pending.notes,
+            currency: pending.currency ?? "USD",
+          },
         });
 
         setStage(3);
