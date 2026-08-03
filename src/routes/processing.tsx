@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -106,9 +106,20 @@ function ProcessingPage() {
           <>
             <h1 className="mt-8 font-display text-3xl">That didn't go to plan</h1>
             <p className="mt-3 text-muted-foreground">{error}</p>
-            <Button className="mt-6 rounded-full" onClick={() => navigate({ to: "/upload" })}>
-              Try again
-            </Button>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              {error.toLowerCase().includes("guest runs") ? (
+                <Button asChild className="rounded-full">
+                  <Link to="/auth">Create a free account</Link>
+                </Button>
+              ) : null}
+              <Button
+                variant={error.toLowerCase().includes("guest runs") ? "secondary" : "default"}
+                className="rounded-full"
+                onClick={() => navigate({ to: "/upload" })}
+              >
+                Try again
+              </Button>
+            </div>
           </>
         ) : (
           <>
