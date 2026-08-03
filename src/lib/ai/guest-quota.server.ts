@@ -81,10 +81,14 @@ export async function guardAiUsage(consume: boolean): Promise<GuestGuardResult> 
   }
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  // The generated Database types don't include these helper RPCs yet.
+  const admin = supabaseAdmin as unknown as {
+    rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>;
+  };
   const key = await fingerprint();
 
   if (consume) {
-    const { data, error } = await supabaseAdmin.rpc("consume_guest_ai_run", {
+    const { data, error } = await admin.rpc("consume_guest_ai_run", {
       _fingerprint: key,
       _limit: GUEST_RUN_LIMIT,
     });
@@ -97,7 +101,7 @@ export async function guardAiUsage(consume: boolean): Promise<GuestGuardResult> 
     return { authenticated: false, runsUsed: runs, runsLeft: Math.max(0, GUEST_RUN_LIMIT - runs) };
   }
 
-  const { data, error } = await supabaseAdmin.rpc("guest_ai_runs_used", { _fingerprint: key });
+  const { data, error } = await admin.rpc("guest_ai_runs_used", { _fingerprint: key });
   if (error) {
     console.error("[guest-quota]", error);
     throw new Error("We couldn't continue your project just now. Please try again.");
