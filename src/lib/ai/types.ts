@@ -1,3 +1,5 @@
+import type { CrochetCurrency } from "@/lib/currency";
+
 // Shared, client-safe contracts for the CrochetIQ AI layer.
 // Every AI provider adapter must satisfy these shapes, so adding a new
 // provider later never touches UI code.
