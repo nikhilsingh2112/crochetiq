@@ -358,8 +358,27 @@ function ResultsPage() {
         </Card>
 
         <Card className="mt-6 rounded-3xl border-border/60 bg-sage/20 shadow-soft">
-          <CardHeader>
+          <CardHeader className="flex-row items-center justify-between gap-3 space-y-0">
             <CardTitle className="font-display text-xl">Pricing Suggestion</CardTitle>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Show in</span>
+              <Button
+                size="sm"
+                variant={displayCurrency === "INR" ? "default" : "secondary"}
+                className="h-7 rounded-full px-2.5 text-xs"
+                onClick={() => setDisplayCurrency("INR")}
+              >
+                ₹ INR
+              </Button>
+              <Button
+                size="sm"
+                variant={displayCurrency === "USD" ? "default" : "secondary"}
+                className="h-7 rounded-full px-2.5 text-xs"
+                onClick={() => setDisplayCurrency("USD")}
+              >
+                $ USD
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div>
@@ -367,7 +386,7 @@ function ResultsPage() {
                 Estimated Price Range
               </p>
               <p className="mt-1 font-display text-2xl">
-                ${Math.round(content.pricingMin)} – ${Math.round(content.pricingMax)}
+                {formatPrice(content.pricingMin, displayCurrency)} – {formatPrice(content.pricingMax, displayCurrency)}
               </p>
             </div>
             <div>
@@ -379,7 +398,7 @@ function ResultsPage() {
             <Detail label="Difficulty" value={analysis.difficulty} />
             <Detail label="Estimated Time Investment" value={content.estimatedTime} />
             <p className="text-xs text-muted-foreground sm:col-span-2 lg:col-span-4">
-              This is an estimate only — your local market, materials and experience are the final word.
+              Estimates are in {currencyLabel(content.currency)} based on your location. Your local market, materials and experience are the final word.
             </p>
           </CardContent>
         </Card>
