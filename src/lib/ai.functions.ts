@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+import type { CrochetCurrency } from "@/lib/currency";
 import type {
   CrochetAnalysis,
   CrochetContent,
