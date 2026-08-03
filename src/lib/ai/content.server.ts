@@ -1,4 +1,5 @@
 // Content Generation Service — consumes structured Vision output only.
+import type { CrochetCurrency } from "@/lib/currency";
 import { chatJson } from "./provider.server";
 import type { CrochetAnalysis, CrochetContent, CrochetGoal } from "./types";
 import { GOAL_LABELS } from "./types";
