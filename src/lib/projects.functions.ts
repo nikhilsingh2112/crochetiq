@@ -119,7 +119,9 @@ export const getDashboard = createServerFn({ method: "GET" })
 
     const { data: projects } = await supabase
       .from("projects")
-      .select("id, goal, notes, created_at, enhanced_image_url, ai_analysis(detected_item, category, difficulty)")
+      .select(
+        "id, goal, notes, created_at, enhanced_image_url, ai_analysis(detected_item, category, difficulty), ai_content(pricing_min, pricing_max, currency)",
+      )
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(12);
