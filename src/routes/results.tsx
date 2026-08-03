@@ -26,6 +26,7 @@ import { GOAL_LABELS, type CrochetProjectDraft } from "@/lib/ai/types";
 import { generateCrochetContent } from "@/lib/ai.functions";
 import { clearDraft, loadDraft, saveDraft } from "@/lib/draft-store";
 import { saveCrochetProject } from "@/lib/projects.functions";
+import { currencyLabel, formatPrice, type CrochetCurrency } from "@/lib/currency";
 
 export const Route = createFileRoute("/results")({
   head: () => ({
