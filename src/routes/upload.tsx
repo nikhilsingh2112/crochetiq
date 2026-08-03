@@ -5,6 +5,7 @@ import { ImagePlus, Loader2, ShoppingBag, Sparkles, Lightbulb, X } from "lucide-
 import { toast } from "sonner";
 
 import { SiteHeader } from "@/components/SiteHeader";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { savePendingUpload } from "@/lib/draft-store";
 import { getGuestAllowance } from "@/lib/ai.functions";
 import type { CrochetGoal } from "@/lib/ai/types";
+import { currencyLabel, detectCurrency, type CrochetCurrency } from "@/lib/currency";
 
 export const Route = createFileRoute("/upload")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -80,8 +82,13 @@ function UploadPage() {
   const [notes, setNotes] = useState("");
   const [dragging, setDragging] = useState(false);
   const [reading, setReading] = useState(false);
+  const [currency, setCurrency] = useState<CrochetCurrency>("USD");
   const allowance = useServerFn(getGuestAllowance);
   const [guestRunsLeft, setGuestRunsLeft] = useState<number | null>(null);
+
+  useEffect(() => {
+    setCurrency(detectCurrency());
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -115,7 +122,7 @@ function UploadPage() {
       toast.error("Add a photo of your crochet first.");
       return;
     }
-    savePendingUpload({ image, goal, notes });
+    savePendingUpload({ image, goal, notes, currency });
     navigate({ to: "/processing" });
   }
 
@@ -151,7 +158,18 @@ function UploadPage() {
           </div>
         ) : null}
 
-        <Card className="mt-8 rounded-3xl border-border/60 shadow-soft">
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <Badge variant="secondary" className="rounded-full px-3 py-1.5">
+            Pricing estimates in {currencyLabel(currency)}
+          </Badge>
+          <p className="text-xs text-muted-foreground">
+            {currency === "INR"
+              ? "Detected India — prices will suit the Indian handmade market."
+              : "Detected outside India — prices will be in US Dollars."}
+          </p>
+        </div>
+
+        <Card className="mt-6 rounded-3xl border-border/60 shadow-soft">
           <CardContent className="p-6">
             <div
               onDragOver={(event) => {

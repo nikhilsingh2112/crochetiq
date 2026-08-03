@@ -25,6 +25,7 @@ const saveSchema = z.object({
     hashtags: z.array(z.string()),
     pricingMin: z.number(),
     pricingMax: z.number(),
+    currency: z.enum(["INR", "USD"]).default("USD"),
   }),
   ideas: z.array(z.object({ title: z.string(), description: z.string().default("") })),
 });
@@ -93,6 +94,7 @@ export const saveCrochetProject = createServerFn({ method: "POST" })
         hashtags: data.content.hashtags,
         pricing_min: data.content.pricingMin,
         pricing_max: data.content.pricingMax,
+        currency: data.content.currency,
       }),
       data.ideas.length
         ? supabase.from("ideas").insert(
@@ -117,7 +119,9 @@ export const getDashboard = createServerFn({ method: "GET" })
 
     const { data: projects } = await supabase
       .from("projects")
-      .select("id, goal, notes, created_at, enhanced_image_url, ai_analysis(detected_item, category, difficulty)")
+      .select(
+        "id, goal, notes, created_at, enhanced_image_url, ai_analysis(detected_item, category, difficulty), ai_content(pricing_min, pricing_max, currency)",
+      )
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(12);
@@ -138,6 +142,7 @@ export const getDashboard = createServerFn({ method: "GET" })
           }
         }
         const analysis = Array.isArray(row.ai_analysis) ? row.ai_analysis[0] : row.ai_analysis;
+        const content = Array.isArray(row.ai_content) ? row.ai_content[0] : row.ai_content;
         return {
           id: row.id as string,
           goal: row.goal as string,
@@ -146,6 +151,9 @@ export const getDashboard = createServerFn({ method: "GET" })
           detectedItem: analysis?.detected_item ?? "Crochet project",
           category: analysis?.category ?? "Handmade",
           difficulty: analysis?.difficulty ?? "",
+          pricingMin: content?.pricing_min ?? 0,
+          pricingMax: content?.pricing_max ?? 0,
+          currency: (content?.currency as "INR" | "USD") ?? "USD",
         };
       }),
     );

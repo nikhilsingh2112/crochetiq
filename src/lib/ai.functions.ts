@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+import type { CrochetCurrency } from "@/lib/currency";
 import type {
   CrochetAnalysis,
   CrochetContent,
@@ -29,6 +30,7 @@ const contentSchema = z.object({
   }),
   goal: z.enum(["social", "sell", "ideas"]),
   notes: z.string().max(1000).default(""),
+  currency: z.enum(["INR", "USD"]).default("USD"),
 });
 
 /** Vision Service entry point. Consumes one guest run. */
@@ -58,7 +60,7 @@ export const generateCrochetContent = createServerFn({ method: "POST" })
     const { guardAiUsage } = await import("./ai/guest-quota.server");
     await guardAiUsage(false);
     const { runContent } = await import("./ai/content.server");
-    return runContent(data.analysis, data.goal as CrochetGoal, data.notes);
+    return runContent(data.analysis, data.goal as CrochetGoal, data.notes, data.currency as CrochetCurrency);
   });
 
 /** How many free runs an unauthenticated visitor has left. */

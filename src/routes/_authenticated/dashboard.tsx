@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { formatPrice } from "@/lib/currency";
 import { getDashboard } from "@/lib/projects.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
@@ -84,6 +85,9 @@ function DashboardPage() {
                             day: "numeric",
                             year: "numeric",
                           })}
+                        </p>
+                        <p className="mt-2 font-display text-lg">
+                          {formatPrice(project.pricingMin, project.currency)} – {formatPrice(project.pricingMax, project.currency)}
                         </p>
                         <div className="mt-3 flex flex-wrap gap-2">
                           <Badge variant="secondary" className="rounded-full">{project.category}</Badge>

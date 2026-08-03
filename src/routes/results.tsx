@@ -26,6 +26,7 @@ import { GOAL_LABELS, type CrochetProjectDraft } from "@/lib/ai/types";
 import { generateCrochetContent } from "@/lib/ai.functions";
 import { clearDraft, loadDraft, saveDraft } from "@/lib/draft-store";
 import { saveCrochetProject } from "@/lib/projects.functions";
+import { currencyLabel, formatPrice, type CrochetCurrency } from "@/lib/currency";
 
 export const Route = createFileRoute("/results")({
   head: () => ({
@@ -57,6 +58,7 @@ function ResultsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [gateOpen, setGateOpen] = useState(false);
+  const [displayCurrency, setDisplayCurrency] = useState<CrochetCurrency>("USD");
 
   useEffect(() => {
     const stored = loadDraft();
@@ -66,6 +68,7 @@ function ResultsPage() {
     }
     setDraft(stored);
     setItemName(stored.analysis.detectedItem);
+    setDisplayCurrency(stored.content.currency ?? "USD");
   }, [navigate]);
 
   if (!draft) {
@@ -90,7 +93,12 @@ function ResultsPage() {
     try {
       const nextAnalysis = { ...draft.analysis, detectedItem: itemName.trim() };
       const nextContent = await regenerate({
-        data: { analysis: nextAnalysis, goal: draft.goal, notes: draft.notes },
+        data: {
+          analysis: nextAnalysis,
+          goal: draft.goal,
+          notes: draft.notes,
+          currency: draft.content.currency ?? "USD",
+        },
       });
       const next = { ...draft, analysis: nextAnalysis, content: nextContent };
       setDraft(next);
@@ -144,6 +152,7 @@ function ResultsPage() {
             hashtags: draft.content.hashtags,
             pricingMin: draft.content.pricingMin,
             pricingMax: draft.content.pricingMax,
+            currency: draft.content.currency ?? "USD",
           },
           ideas: draft.content.ideas.map((idea) => ({
             title: idea.title,
@@ -349,8 +358,27 @@ function ResultsPage() {
         </Card>
 
         <Card className="mt-6 rounded-3xl border-border/60 bg-sage/20 shadow-soft">
-          <CardHeader>
+          <CardHeader className="flex-row items-center justify-between gap-3 space-y-0">
             <CardTitle className="font-display text-xl">Pricing Suggestion</CardTitle>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Show in</span>
+              <Button
+                size="sm"
+                variant={displayCurrency === "INR" ? "default" : "secondary"}
+                className="h-7 rounded-full px-2.5 text-xs"
+                onClick={() => setDisplayCurrency("INR")}
+              >
+                ₹ INR
+              </Button>
+              <Button
+                size="sm"
+                variant={displayCurrency === "USD" ? "default" : "secondary"}
+                className="h-7 rounded-full px-2.5 text-xs"
+                onClick={() => setDisplayCurrency("USD")}
+              >
+                $ USD
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div>
@@ -358,7 +386,7 @@ function ResultsPage() {
                 Estimated Price Range
               </p>
               <p className="mt-1 font-display text-2xl">
-                ${Math.round(content.pricingMin)} – ${Math.round(content.pricingMax)}
+                {formatPrice(content.pricingMin, displayCurrency)} – {formatPrice(content.pricingMax, displayCurrency)}
               </p>
             </div>
             <div>
@@ -370,7 +398,11 @@ function ResultsPage() {
             <Detail label="Difficulty" value={analysis.difficulty} />
             <Detail label="Estimated Time Investment" value={content.estimatedTime} />
             <p className="text-xs text-muted-foreground sm:col-span-2 lg:col-span-4">
-              This is an estimate only — your local market, materials and experience are the final word.
+              Estimates are shown in {currencyLabel(displayCurrency)}
+              {displayCurrency === content.currency
+                ? " based on your location."
+                : " (you switched the display currency)."}{" "}
+              Your local market, materials and experience are the final word.
             </p>
           </CardContent>
         </Card>
