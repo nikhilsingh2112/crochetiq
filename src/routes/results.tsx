@@ -386,8 +386,10 @@ function ResultsPage() {
                 Estimated Price Range
               </p>
               <p className="mt-1 font-display text-2xl">
-                {formatPrice(content.pricingMin, displayCurrency)} – {formatPrice(content.pricingMax, displayCurrency)}
+                {formatPrice(convertPrice(content.pricingMin, content.currency ?? "USD", displayCurrency), displayCurrency)} –{" "}
+                {formatPrice(convertPrice(content.pricingMax, content.currency ?? "USD", displayCurrency), displayCurrency)}
               </p>
+
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
