@@ -35,6 +35,7 @@ export interface CrochetContent {
   hashtags: string[];
   pricingMin: number;
   pricingMax: number;
+  currency: CrochetCurrency;
   materialsConsidered: string[];
   estimatedTime: string;
   ideas: CrochetIdea[];
