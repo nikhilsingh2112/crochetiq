@@ -86,6 +86,9 @@ function DashboardPage() {
                             year: "numeric",
                           })}
                         </p>
+                        <p className="mt-2 font-display text-lg">
+                          {formatPrice(project.pricingMin, project.currency)} – {formatPrice(project.pricingMax, project.currency)}
+                        </p>
                         <div className="mt-3 flex flex-wrap gap-2">
                           <Badge variant="secondary" className="rounded-full">{project.category}</Badge>
                           {project.difficulty ? (
