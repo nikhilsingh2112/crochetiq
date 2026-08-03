@@ -58,6 +58,7 @@ export type Database = {
       ai_content: {
         Row: {
           created_at: string
+          currency: string
           friendly_caption: string | null
           hashtags: string[]
           id: string
@@ -70,6 +71,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          currency?: string
           friendly_caption?: string | null
           hashtags?: string[]
           id?: string
@@ -82,6 +84,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          currency?: string
           friendly_caption?: string | null
           hashtags?: string[]
           id?: string
