@@ -82,8 +82,13 @@ function UploadPage() {
   const [notes, setNotes] = useState("");
   const [dragging, setDragging] = useState(false);
   const [reading, setReading] = useState(false);
+  const [currency, setCurrency] = useState<CrochetCurrency>("USD");
   const allowance = useServerFn(getGuestAllowance);
   const [guestRunsLeft, setGuestRunsLeft] = useState<number | null>(null);
+
+  useEffect(() => {
+    setCurrency(detectCurrency());
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -117,7 +122,7 @@ function UploadPage() {
       toast.error("Add a photo of your crochet first.");
       return;
     }
-    savePendingUpload({ image, goal, notes });
+    savePendingUpload({ image, goal, notes, currency });
     navigate({ to: "/processing" });
   }
 
