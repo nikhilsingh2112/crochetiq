@@ -73,7 +73,8 @@ function ProcessingPage() {
         saveDraft({
           originalImage: pending.image,
           enhancedImage: enhancement.imageUrl,
-          enhancementNote: enhancement.note,
+          ...(enhancement.note ? { enhancementNote: enhancement.note } : {}),
+
           goal: pending.goal,
           notes: pending.notes,
           analysis,
