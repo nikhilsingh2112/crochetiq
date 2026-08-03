@@ -100,8 +100,10 @@ export const saveCrochetProject = createServerFn({ method: "POST" })
               project_id: project.id,
               title: idea.title,
               description: idea.description,
+              saved: true,
             })),
           )
+
         : Promise.resolve(),
     ]);
 
