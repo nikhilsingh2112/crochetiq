@@ -6,6 +6,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { YarnMark } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -57,6 +59,8 @@ const features = [
 ];
 
 function LandingPage() {
+  const { isAuthenticated, loading: authLoading } = useAuth();
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
@@ -81,16 +85,27 @@ function LandingPage() {
                 <Button asChild size="lg" className="rounded-full px-7 shadow-lift">
                   <Link to="/upload">Upload Your Crochet</Link>
                 </Button>
-                <Button asChild size="lg" variant="secondary" className="rounded-full px-7">
-                  <Link to="/upload" search={{ guest: true }}>
-                    Try without Signing In
-                  </Link>
-                </Button>
+                {authLoading ? null : isAuthenticated ? (
+                  <Button asChild size="lg" variant="secondary" className="rounded-full px-7">
+                    <Link to="/dashboard">Go to Dashboard</Link>
+                  </Button>
+                ) : (
+                  <Button asChild size="lg" variant="secondary" className="rounded-full px-7">
+                    <Link to="/upload" search={{ guest: true }}>
+                      Try without Signing In
+                    </Link>
+                  </Button>
+                )}
               </div>
-              <p className="mt-4 text-sm text-muted-foreground">
-                No account needed to try it. Sign up only when you want to keep your projects.
-              </p>
+              {authLoading ? null : (
+                <p className="mt-4 text-sm text-muted-foreground">
+                  {isAuthenticated
+                    ? "You're signed in — every project you save lands in your dashboard."
+                    : "No account needed to try it. Sign up only when you want to keep your projects."}
+                </p>
+              )}
             </div>
+
 
             <div className="relative">
               <div className="absolute -inset-4 rounded-[2.5rem] bg-card/50 blur-2xl" aria-hidden="true" />
