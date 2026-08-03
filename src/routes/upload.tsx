@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { ImagePlus, Loader2, ShoppingBag, Sparkles, Lightbulb, X } from "lucide-react";
 import { toast } from "sonner";
 
@@ -9,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { savePendingUpload } from "@/lib/draft-store";
+import { getGuestAllowance } from "@/lib/ai.functions";
 import type { CrochetGoal } from "@/lib/ai/types";
 
 export const Route = createFileRoute("/upload")({
@@ -78,6 +80,19 @@ function UploadPage() {
   const [notes, setNotes] = useState("");
   const [dragging, setDragging] = useState(false);
   const [reading, setReading] = useState(false);
+  const allowance = useServerFn(getGuestAllowance);
+  const [guestRunsLeft, setGuestRunsLeft] = useState<number | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void allowance().then((result) => {
+      if (!active) return;
+      setGuestRunsLeft(result.authenticated ? null : result.runsLeft);
+    });
+    return () => {
+      active = false;
+    };
+  }, [allowance]);
 
   async function accept(file: File | undefined) {
     if (!file) return;
@@ -112,6 +127,29 @@ function UploadPage() {
         <p className="mt-3 text-muted-foreground">
           One clear photo is all we need. JPG or PNG, natural light if you have it.
         </p>
+
+        {guestRunsLeft !== null ? (
+          <div className="mt-6 rounded-3xl border border-border/60 bg-lavender/25 px-5 py-4 text-sm">
+            {guestRunsLeft > 0 ? (
+              <p>
+                You have <strong>{guestRunsLeft}</strong> free guest{" "}
+                {guestRunsLeft === 1 ? "project" : "projects"} left.{" "}
+                <Link to="/auth" className="font-semibold underline underline-offset-4">
+                  Create a free account
+                </Link>{" "}
+                for unlimited runs and saved projects.
+              </p>
+            ) : (
+              <p>
+                You've used your free guest projects.{" "}
+                <Link to="/auth" className="font-semibold underline underline-offset-4">
+                  Create a free account
+                </Link>{" "}
+                to keep creating — it only takes a few seconds.
+              </p>
+            )}
+          </div>
+        ) : null}
 
         <Card className="mt-8 rounded-3xl border-border/60 shadow-soft">
           <CardContent className="p-6">

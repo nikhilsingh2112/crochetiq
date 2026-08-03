@@ -102,6 +102,30 @@ export type Database = {
           },
         ]
       }
+      guest_ai_usage: {
+        Row: {
+          fingerprint: string
+          first_used_at: string
+          id: string
+          last_used_at: string
+          runs: number
+        }
+        Insert: {
+          fingerprint: string
+          first_used_at?: string
+          id?: string
+          last_used_at?: string
+          runs?: number
+        }
+        Update: {
+          fingerprint?: string
+          first_used_at?: string
+          id?: string
+          last_used_at?: string
+          runs?: number
+        }
+        Relationships: []
+      }
       ideas: {
         Row: {
           created_at: string
@@ -199,7 +223,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      consume_guest_ai_run: {
+        Args: { _fingerprint: string; _limit: number }
+        Returns: number
+      }
+      guest_ai_runs_used: { Args: { _fingerprint: string }; Returns: number }
     }
     Enums: {
       [_ in never]: never
