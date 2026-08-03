@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { formatPrice } from "@/lib/currency";
 import { getDashboard } from "@/lib/projects.functions";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
