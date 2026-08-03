@@ -6,6 +6,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { YarnMark } from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/hooks/useAuth";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
